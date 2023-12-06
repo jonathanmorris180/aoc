@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration status="debug" strict="true" name="XMLConfigTest"
-               packages="org.apache.logging.log4j.test">
+               packages="com.jonathanmorris.Main">
   <Properties>
-    <Property name="filename">target/test.log</Property>
+    <Property name="filename">target/output.log</Property>
   </Properties>
   <Filter type="ThresholdFilter" level="trace"/>
  
@@ -29,15 +29,11 @@
   </Appenders>
  
   <Loggers>
-    <Logger name="org.apache.logging.log4j.test1" level="debug" additivity="false">
+    <Logger name="com.jonathanmorris.Main" level="debug" additivity="false">
       <Filter type="ThreadContextMapFilter">
         <KeyValuePair key="test" value="123"/>
       </Filter>
       <AppenderRef ref="STDOUT"/>
-    </Logger>
- 
-    <Logger name="org.apache.logging.log4j.test2" level="debug" additivity="false">
-      <AppenderRef ref="File"/>
     </Logger>
  
     <Root level="trace">
