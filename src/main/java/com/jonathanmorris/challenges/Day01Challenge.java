@@ -18,6 +18,8 @@ public class Day01Challenge implements Challenge {
           "one", 1, "two", 2, "three", 3, "four", 4, "five", 5, "six", 6, "seven", 7, "eight", 8,
           "nine", 9);
   private static final String WORDS_TO_NUMBER_REGEX = String.join("|", WORDS_TO_NUMBER.keySet());
+  private static final List<String> ORDERED_NUMS =
+      Arrays.asList("one", "two", "three", "four", "five", "six", "seven", "eight", "nine");
 
   @Override
   public void execute(final List<String> lines) {
@@ -25,9 +27,8 @@ public class Day01Challenge implements Challenge {
     numbers.toString();
     String firstNumber = "";
     String lastNumber = "";
-    logger.info("wordsToNumberRegex is: {}", WORDS_TO_NUMBER_REGEX);
     for (String line : lines) {
-      line = this.getStringWithNumbers(line);
+      line = this.replaceWithNumbers(line);
       logger.info("Line is: {}", line);
       List<String> chars = Arrays.asList(line.trim().split(""));
       for (String currentChar : chars) {
@@ -53,17 +54,52 @@ public class Day01Challenge implements Challenge {
     return currentChar.matches("[0-9]");
   }
 
-  private String getStringWithNumbers(final String line) {
-    Pattern pattern = Pattern.compile(WORDS_TO_NUMBER_REGEX);
+  private String replaceWithNumbers(final String line) {
+    Pattern pattern = Pattern.compile(this.addGroup(WORDS_TO_NUMBER_REGEX));
     Matcher matcher = pattern.matcher(line);
 
     StringBuffer buffer = new StringBuffer();
-    while (matcher.find()) {
-      String match = matcher.group();
-      matcher.appendReplacement(buffer, String.valueOf(WORDS_TO_NUMBER.get(match)));
+    if (matcher.find()) {
+
+      List<Integer> numbersToAdd = new ArrayList<>();
+      int previousEnd = 0;
+      String previousNumber = "";
+      boolean isOverlapping = false;
+      do {
+        String match = matcher.group();
+        logger.info("Match is: {}", match);
+        if (!isOverlapping && !numbersToAdd.isEmpty()) {
+          logger.info("resetting list");
+          numbersToAdd = new ArrayList<>();
+        }
+        if (previousEnd != 0 && previousEnd >= matcher.start()) {
+          logger.info("overlap found");
+          isOverlapping = true;
+          numbersToAdd.add(WORDS_TO_NUMBER.get(match));
+          previousEnd = matcher.end();
+          continue;
+        } else if (!isOverlapping && previousEnd != 0 && previousEnd < matcher.start()) {
+          logger.info("adding previous value");
+          matcher.appendReplacement(buffer, String.valueOf(WORDS_TO_NUMBER.get(previousNumber)));
+        }
+        if (!isOverlapping) {
+          logger.info("default");
+          previousNumber = match;
+        }
+        previousEnd = matcher.end();
+      } while (matcher.find(matcher.start() + 1));
+      if (isOverlapping) {
+        logger.info("adding value from overlap");
+        String replacement = numbersToAdd.stream().map(String::valueOf).reduce("", String::concat);
+        matcher.appendReplacement(buffer, replacement);
+        isOverlapping = false;
+      }
     }
     matcher.appendTail(buffer);
-    logger.info("Buffer is: {}", buffer.toString());
     return buffer.toString();
+  }
+
+  private String addGroup(final String line) {
+    return String.format("(%s)", line);
   }
 }
