@@ -6,7 +6,6 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/** Hello world! */
 public class Main {
   private static final Logger logger = LoggerFactory.getLogger(Main.class);
   private static final String FILE_NAME_PLACEHOLDER = "inputs/dayXX.txt";
