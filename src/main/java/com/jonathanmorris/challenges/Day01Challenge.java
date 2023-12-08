@@ -21,7 +21,8 @@ public class Day01Challenge implements Challenge {
     for (String line : lines) {
       logger.info("Line is: {}", line);
       List<Integer> numberStrings = getNumbersFrom(line);
-      List<Integer> firstAndLast = List.of(numberStrings.get(0), numberStrings.get(numberStrings.size() - 1));
+      List<Integer> firstAndLast =
+          List.of(numberStrings.get(0), numberStrings.get(numberStrings.size() - 1));
       String numberString =
           String.join("", firstAndLast.stream().map(String::valueOf).toArray(String[]::new));
       logger.info("Number string is: {}", numberString);
