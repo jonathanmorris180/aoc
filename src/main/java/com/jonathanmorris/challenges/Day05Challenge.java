@@ -68,11 +68,11 @@ public class Day05Challenge implements Challenge {
       this.lines = new ArrayList<>();
     }
 
-    public void addLine(String line) {
+    private void addLine(String line) {
       this.lines.add(new Line(line));
     }
 
-    public String getName() {
+    private String getName() {
       return this.name;
     }
 
@@ -106,15 +106,15 @@ public class Day05Challenge implements Challenge {
       this.rangeLength = numbers.get(2);
     }
 
-    public Long getRangeLength() {
+    private Long getRangeLength() {
       return this.rangeLength;
     }
 
-    public Long getSourceNum() {
+    private Long getSourceNum() {
       return this.sourceNum;
     }
 
-    public Long getDestNum() {
+    private Long getDestNum() {
       return this.destNum;
     }
   }
