@@ -42,8 +42,9 @@ public class Day03Challenge implements Challenge {
           }
           currentNumber += character;
           isPartNumber = isPartNumber || this.checkSurrounding(lines, i, j);
-        }         
-        if ((currentNumber.length() > 0 && !isNumber && isPartNumber) || (isLastCharacter && isNumber && isPartNumber)) {
+        }
+        if ((currentNumber.length() > 0 && !isNumber && isPartNumber)
+            || (isLastCharacter && isNumber && isPartNumber)) {
           allPartNumbers.add(Integer.parseInt(currentNumber));
           currentNumber = "";
           isPartNumber = false;
@@ -104,7 +105,8 @@ public class Day03Challenge implements Challenge {
           visited.add(List.of(jx, back));
           back--;
         }
-        while (forwards < currentLine.length() && isNumber(String.valueOf(currentLine.charAt(forwards)))) {
+        while (forwards < currentLine.length()
+            && isNumber(String.valueOf(currentLine.charAt(forwards)))) {
           String forwardsChar = String.valueOf(currentLine.charAt(forwards));
           if (isNumber(forwardsChar)) {
             numberChars.add(forwardsChar);
