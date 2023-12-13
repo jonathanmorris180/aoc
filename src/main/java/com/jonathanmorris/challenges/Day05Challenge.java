@@ -3,7 +3,6 @@ package com.jonathanmorris.challenges;
 import com.jonathanmorris.Challenge;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,10 +25,10 @@ public class Day05Challenge implements Challenge {
 
   @Override
   public void execute(List<String> lines) {
-    List<Integer> seeds =
-        Arrays.stream(lines.get(0).split(":")[1].trim().split(" ")).map(Integer::valueOf).toList();
+    List<Long> seeds =
+        Arrays.stream(lines.get(0).split(":")[1].trim().split(" ")).map(Long::valueOf).toList();
     Map<String, GardenerMap> gardenerMaps = new HashMap<>();
-    List<Integer> locations = new ArrayList<>();
+    List<Long> locations = new ArrayList<>();
     String mapName = "";
     for (String line : lines) {
       if (line.contains(MAP)) {
@@ -41,42 +40,33 @@ public class Day05Challenge implements Challenge {
         currentMap.addLine(line);
       }
     }
-    this.parse(gardenerMaps.values());
-    for (Integer seed : seeds) {
-      Integer value = 0;
+    for (Long seed : seeds) {
+      Long value = 0L;
       for (String map : MAPS) {
         logger.info("current map is {}", map);
         GardenerMap gardenerMap = gardenerMaps.get(map);
         if (value == 0) {
-          Integer nextVal = gardenerMap.getValue(seed);
+          Long nextVal = gardenerMap.getValue(seed);
           value = nextVal == null ? seed : nextVal;
           continue;
         }
-        Integer nextVal = gardenerMap.getValue(value);
+        Long nextVal = gardenerMap.getValue(value);
         value = nextVal == null ? value : nextVal;
       }
       locations.add(value);
     }
     logger.debug("locations are {}", locations);
     logger.debug(
-        "Answer for part one is {}", locations.stream().reduce(Integer.MAX_VALUE, Integer::min));
-  }
-
-  private void parse(Collection<GardenerMap> gardenerMaps) {
-    for (GardenerMap map : gardenerMaps) {
-      map.parseLines();
-    }
+        "Answer for part one is {}", locations.stream().reduce(Long.MAX_VALUE, Long::min));
   }
 
   private class GardenerMap {
     private final String name;
     private final List<Line> lines;
-    private final Map<Integer, Integer> mappedValues;
 
     private GardenerMap(String name) {
       this.name = name;
       this.lines = new ArrayList<>();
-      this.mappedValues = new HashMap<>();
     }
 
     public void addLine(String line) {
@@ -87,46 +77,45 @@ public class Day05Challenge implements Challenge {
       return this.name;
     }
 
-    public Integer getValue(Integer val) {
-      return this.mappedValues.get(val);
-    }
-
-    public void parseLines() {
+    private Long getValue(Long val) {
+      logger.debug("getting value for {}", val);
       for (Line line : lines) {
-        Integer sourceNum = line.getSourceNum();
-        Integer destNum = line.getDestNum();
-        for (int i = 0; i < line.getRangeLength(); i++) {
-          this.mappedValues.put(sourceNum, destNum);
-          sourceNum++;
-          destNum++;
+        Long sourceNum = line.getSourceNum();
+        Long destNum = line.getDestNum();
+        Long rangeLength = line.getRangeLength();
+        if (val > sourceNum && val < sourceNum + rangeLength) {
+          Long offset = val - sourceNum;
+          Long result = destNum + offset;
+          logger.debug("found value {}", result);
+          return result;
         }
       }
-      logger.info("mapping name is {}", this.name);
-      logger.info("mappedValues are {}", this.mappedValues);
+      logger.debug("not in range, returning {}", val);
+      return val;
     }
   }
 
   private class Line {
-    private Integer destNum;
-    private Integer sourceNum;
-    private Integer rangeLength;
+    private Long destNum;
+    private Long sourceNum;
+    private Long rangeLength;
 
     private Line(String line) {
-      List<Integer> numbers = Arrays.stream(line.split(" ")).map(Integer::valueOf).toList();
+      List<Long> numbers = Arrays.stream(line.split(" ")).map(Long::valueOf).toList();
       this.destNum = numbers.get(0);
       this.sourceNum = numbers.get(1);
       this.rangeLength = numbers.get(2);
     }
 
-    public Integer getRangeLength() {
+    public Long getRangeLength() {
       return this.rangeLength;
     }
 
-    public Integer getSourceNum() {
+    public Long getSourceNum() {
       return this.sourceNum;
     }
 
-    public Integer getDestNum() {
+    public Long getDestNum() {
       return this.destNum;
     }
   }
