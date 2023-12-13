@@ -56,8 +56,7 @@ public class Day05Challenge implements Challenge {
       locations.add(value);
     }
     logger.debug("locations are {}", locations);
-    logger.debug(
-        "Answer for part one is {}", locations.stream().reduce(Long.MAX_VALUE, Long::min));
+    logger.debug("Answer for part one is {}", locations.stream().reduce(Long.MAX_VALUE, Long::min));
   }
 
   private class GardenerMap {
