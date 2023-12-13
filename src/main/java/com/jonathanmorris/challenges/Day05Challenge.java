@@ -45,22 +45,26 @@ public class Day05Challenge implements Challenge {
     for (Integer seed : seeds) {
       Integer value = 0;
       for (String map : MAPS) {
+        logger.info("current map is {}", map);
         GardenerMap gardenerMap = gardenerMaps.get(map);
         if (value == 0) {
-          value = gardenerMap.getValue(seed);
+          Integer nextVal = gardenerMap.getValue(seed);
+          value = nextVal == null ? seed : nextVal;
           continue;
         }
-        value = gardenerMap.getValue(value);
+        Integer nextVal = gardenerMap.getValue(value);
+        value = nextVal == null ? value : nextVal;
       }
       locations.add(value);
     }
-    logger.debug("Answer for part one is {}", locations.stream().reduce(0, Integer::min));
+    logger.debug("locations are {}", locations);
+    logger.debug(
+        "Answer for part one is {}", locations.stream().reduce(Integer.MAX_VALUE, Integer::min));
   }
 
   private void parse(Collection<GardenerMap> gardenerMaps) {
     for (GardenerMap map : gardenerMaps) {
       map.parseLines();
-      map.completeMapping();
     }
   }
 
@@ -97,16 +101,8 @@ public class Day05Challenge implements Challenge {
           destNum++;
         }
       }
-    }
-
-    public void completeMapping() {
-      for (Line line : lines) {
-        for (int i = 0; i < line.getMaxSourceVal(); i++) {
-          if (this.mappedValues.get(i) == null) {
-            this.mappedValues.put(i, i);
-          }
-        }
-      }
+      logger.info("mapping name is {}", this.name);
+      logger.info("mappedValues are {}", this.mappedValues);
     }
   }
 
@@ -132,10 +128,6 @@ public class Day05Challenge implements Challenge {
 
     public Integer getDestNum() {
       return this.destNum;
-    }
-
-    public Integer getMaxSourceVal() {
-      return this.sourceNum + this.rangeLength;
     }
   }
 }
