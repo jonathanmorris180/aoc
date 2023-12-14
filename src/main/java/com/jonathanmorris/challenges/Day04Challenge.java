@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 public class Day04Challenge implements Challenge {
 
   private static final Logger logger = LoggerFactory.getLogger(Day01Challenge.class);
+  private static final String REGEX = "[^\\S]{2,}";
 
   @Override
   public void execute(List<String> lines) {
@@ -19,8 +20,8 @@ public class Day04Challenge implements Challenge {
       int totalValue = 1;
       String cardContents = line.substring(line.indexOf(":") + 1).trim();
       String[] numbers = cardContents.split("\\|");
-      String winningNumString = numbers[0].trim();
-      String haveNumString = numbers[1].trim();
+      String winningNumString = numbers[0].trim().replaceAll(REGEX, " ");
+      String haveNumString = numbers[1].trim().replaceAll(REGEX, " ");
       List<String> winningNums = Arrays.asList(winningNumString.split(" "));
       List<String> haveNums = Arrays.asList(haveNumString.split(" "));
       for (String num : haveNums) {
