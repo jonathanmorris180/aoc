@@ -52,7 +52,9 @@ public class Day05Challenge implements Challenge {
         }
         Long nextVal = gardenerMap.getValue(value);
         value = nextVal == null ? value : nextVal;
+        logger.debug("current value is {}", value);
       }
+      logger.debug("Adding value {}", value);
       locations.add(value);
     }
     logger.debug("locations are {}", locations);
@@ -77,7 +79,7 @@ public class Day05Challenge implements Challenge {
     }
 
     private Long getValue(Long val) {
-      logger.debug("getting value for {}", val);
+      // TODO: Figure out why this doesn't seem to return the correct value for seed 82
       for (Line line : lines) {
         Long sourceNum = line.getSourceNum();
         Long destNum = line.getDestNum();
@@ -85,11 +87,9 @@ public class Day05Challenge implements Challenge {
         if (val > sourceNum && val < sourceNum + rangeLength) {
           Long offset = val - sourceNum;
           Long result = destNum + offset;
-          logger.debug("found value {}", result);
           return result;
         }
       }
-      logger.debug("not in range, returning {}", val);
       return val;
     }
   }
