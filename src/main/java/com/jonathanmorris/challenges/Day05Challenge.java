@@ -41,9 +41,11 @@ public class Day05Challenge implements Challenge {
       }
     }
     for (Long seed : seeds) {
+      logger.info("current seed is {}", seed);
       Long value = 0L;
       for (String map : MAPS) {
-        logger.info("current map is {}", map);
+        String currentDest = map.split("to-")[1];
+        logger.info("getting value for {}", currentDest);
         GardenerMap gardenerMap = gardenerMaps.get(map);
         if (value == 0) {
           Long nextVal = gardenerMap.getValue(seed);
@@ -52,7 +54,6 @@ public class Day05Challenge implements Challenge {
         }
         Long nextVal = gardenerMap.getValue(value);
         value = nextVal == null ? value : nextVal;
-        logger.debug("current value is {}", value);
       }
       logger.debug("Adding value {}", value);
       locations.add(value);
@@ -79,14 +80,14 @@ public class Day05Challenge implements Challenge {
     }
 
     private Long getValue(Long val) {
-      // TODO: Figure out why this doesn't seem to return the correct value for seed 82
       for (Line line : lines) {
         Long sourceNum = line.getSourceNum();
         Long destNum = line.getDestNum();
         Long rangeLength = line.getRangeLength();
-        if (val > sourceNum && val < sourceNum + rangeLength) {
+        if (val >= sourceNum && val < sourceNum + rangeLength) {
           Long offset = val - sourceNum;
           Long result = destNum + offset;
+          logger.debug("result is {}", result);
           return result;
         }
       }
