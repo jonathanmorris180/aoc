@@ -23,6 +23,75 @@ public class Day05Challenge implements Challenge {
           "temperature-to-humidity",
           "humidity-to-location");
 
+  // Possible solution for part 2
+  // seeds: 79 14 55 13
+  //
+  // seed-to-soil map:
+  // 50 98 2
+  // 52 50 48
+  //
+  // soil-to-fertilizer map:
+  // 0 15 37
+  // 37 52 2
+  // 39 0 15
+  //
+  // fertilizer-to-water map:
+  // 49 53 8
+  // 0 11 42
+  // 42 0 7
+  // 57 7 4
+  //
+  // water-to-light map:
+  // 88 18 7
+  // 18 25 70
+  //
+  // light-to-temperature map:
+  // 45 77 23
+  // 81 45 19
+  // 68 64 13
+  //
+  // temperature-to-humidity map:
+  // 0 69 1
+  // 1 0 69
+  //
+  // humidity-to-location map:
+  // 60 56 37
+  // 56 93 4
+  //
+  // range = [start, end, displacement]
+  // make seed ranges, e.g.:
+  // [79, 92, null]
+  // ranges for soil are:
+  // -> [[98, 99, -48], [50, 97, +2]]
+  // overlaps: [[79, 92]]
+  // destinations for [79, 92] are: [81, 94]
+  // ranges for fertilizer are:
+  // -> [[15, 51, -15], [52, 53, -15], [0, 14, +39]]
+  // intersects with nothing, so it's still [81, 94]
+  // destinations for [81, 94] are: [81, 94] (no change since no overlaps)
+  // ranges for water are:
+  // -> [[53, 60, -4], [11, 52, -11], [0, 6, +42], [7, 10, +50]]
+  // intersects with nothing, so it's still [81, 94]
+  // destinations for [81, 94] are: [81, 94] (no change since no overlaps)
+  // ranges for light are:
+  // -> [[18, 24, +70], [25, 94, -7]]
+  // so it intersects with [25, 94]
+  // overlaps: [[81, 94]] 
+  // destinations for [81, 94] are: [74, 87] 
+  // ranges for temperature are:
+  // -> [[77, 99, -32], [45, 63, +36], [64, 76, +4]]
+  // overlaps: [[74, 76], [77, 87]]
+  // destinations for [[74, 76], [77, 87]] are: [[78, 80], [45, 55]]
+  // ranges for humidity are:
+  // -> [[69, 69, -69], [0, 68, +1]]
+  // overlaps: [[78, 80], [45, 55]]
+  // destinations for [[78, 80], [45, 55]] are: [[78, 80], [46, 56]] 
+  // ranges for location are:
+  // -> [[56, 92, +4], [93, 96, -37]]
+  // overlaps: [[78, 80], [46, 56]]
+  // destinations for [[78, 80], [46, 56]] are: [82, 84], [46, 56]
+  // lowest value is 46, so answer is 46
+
   @Override
   public void execute(List<String> lines) {
     List<Long> seeds =
@@ -84,13 +153,19 @@ public class Day05Challenge implements Challenge {
         Long sourceNum = line.getSourceNum();
         Long destNum = line.getDestNum();
         Long rangeLength = line.getRangeLength();
+        logger.debug("sourceNum is {}", sourceNum);
+        logger.debug("destNum is {}", destNum);
+        logger.debug("rangeLength is {}", rangeLength);
+
         if (val >= sourceNum && val < sourceNum + rangeLength) {
           Long offset = val - sourceNum;
+          logger.debug("offset is {}", offset);
           Long result = destNum + offset;
           logger.debug("result is {}", result);
           return result;
         }
       }
+      logger.debug("result is {}", val);
       return val;
     }
   }
