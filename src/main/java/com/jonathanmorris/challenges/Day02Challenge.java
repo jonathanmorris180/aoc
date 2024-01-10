@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
 
 public class Day02Challenge implements Challenge {
 
-  private static final Logger logger = LoggerFactory.getLogger(Day01Challenge.class);
+  private static final Logger logger = LoggerFactory.getLogger(Day02Challenge.class);
   private static final Map<String, Integer> MAX_VALUES = Map.of("red", 12, "green", 13, "blue", 14);
 
   @Override

@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
 
 public class Day05Challenge implements Challenge {
 
-  private static final Logger logger = LoggerFactory.getLogger(Day01Challenge.class);
+  private static final Logger logger = LoggerFactory.getLogger(Day05Challenge.class);
   private static final String MAP = "map";
   private static final List<String> MAPS =
       List.of(
@@ -96,6 +96,7 @@ public class Day05Challenge implements Challenge {
   public void execute(List<String> lines) {
     List<Long> seeds =
         Arrays.stream(lines.get(0).split(":")[1].trim().split(" ")).map(Long::valueOf).toList();
+
     Map<String, GardenerMap> gardenerMaps = new HashMap<>();
     List<Long> locations = new ArrayList<>();
     String mapName = "";
@@ -129,6 +130,26 @@ public class Day05Challenge implements Challenge {
     }
     logger.debug("locations are {}", locations);
     logger.debug("Answer for part one is {}", locations.stream().reduce(Long.MAX_VALUE, Long::min));
+    this.executePartTwo(seeds, gardenerMaps);
+  }
+
+  private void executePartTwo(List<Long> seeds, List<GardenerMap> gardenerMaps) {
+    List<List<Long>> initialSeedRanges = new ArrayList<>();
+
+    for (int i = 0; i < seeds.size(); i++) {
+      if (i % 2 == 0) {
+        initialSeedRanges.add(new ArrayList<>(List.of(seeds.get(i))));
+      } else {
+        initialSeedRanges.get(initialSeedRanges.size() - 1).add(seeds.get(i));
+      }
+    }
+
+    for (List<Long> initialSeedRange : initialSeedRanges) {
+      for (String map : MAPS) {
+        String currentDest = map.split("to-")[1];
+        logger.info("getting value for {}", currentDest);
+        GardenerMap gardenerMap = gardenerMaps.get(map);
+      }
   }
 
   private class GardenerMap {
@@ -153,19 +174,13 @@ public class Day05Challenge implements Challenge {
         Long sourceNum = line.getSourceNum();
         Long destNum = line.getDestNum();
         Long rangeLength = line.getRangeLength();
-        logger.debug("sourceNum is {}", sourceNum);
-        logger.debug("destNum is {}", destNum);
-        logger.debug("rangeLength is {}", rangeLength);
 
         if (val >= sourceNum && val < sourceNum + rangeLength) {
           Long offset = val - sourceNum;
-          logger.debug("offset is {}", offset);
           Long result = destNum + offset;
-          logger.debug("result is {}", result);
           return result;
         }
       }
-      logger.debug("result is {}", val);
       return val;
     }
   }
@@ -192,6 +207,30 @@ public class Day05Challenge implements Challenge {
 
     private Long getDestNum() {
       return this.destNum;
+    }
+  }
+
+  private class Range {
+    private Long start;
+    private Long range;
+    private Long displacement;
+
+    private Range(Long start, Long range, Long displacement) {
+      this.start = start;
+      this.range = range;
+      this.displacement = displacement;
+    }
+
+    private Long getStart() {
+      return this.start;
+    }
+
+    private Long getRange() {
+      return this.range;
+    }
+
+    private Long getDisplacement() {
+      return this.displacement;
     }
   }
 }

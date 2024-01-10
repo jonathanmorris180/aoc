@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 
 public class Day03Challenge implements Challenge {
 
-  private static final Logger logger = LoggerFactory.getLogger(Day01Challenge.class);
+  private static final Logger logger = LoggerFactory.getLogger(Day03Challenge.class);
   private static final List<List<Integer>> DIRECTIONS =
       List.of(
           List.of(-1, -1),

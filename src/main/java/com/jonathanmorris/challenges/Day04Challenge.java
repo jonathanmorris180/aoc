@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
 
 public class Day04Challenge implements Challenge {
 
-  private static final Logger logger = LoggerFactory.getLogger(Day01Challenge.class);
+  private static final Logger logger = LoggerFactory.getLogger(Day04Challenge.class);
   private static final String REGEX = "[\\s]{2,}";
 
   @Override
